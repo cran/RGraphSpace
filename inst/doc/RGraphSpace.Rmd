@@ -1,0 +1,208 @@
+---
+title: "*RGraphSpace*: A lightweight package for representing large *igraph* objects in a normalized coordinate system."
+author: "Sysbiolab - Bioinformatics and Systems Biology Laboratory"
+date: "`r Sys.Date()`"
+bibliography: bibliography.bib
+abstract: "<p>*RGraphSpace* is an R package that integrates *igraph* and *ggplot2* graphics within spatial maps. *RGraphSpace* implements new geometric objects using *ggplot2* prototypes, customized for representing large *igraph* objects in a normalized coordinate system.</p>"
+package: "RGraphSpace `r packageVersion('RGraphSpace')`"
+output: 
+  html_document:
+    theme: cerulean
+    self_contained: yes
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    css: custom.css
+vignette: >
+  %\VignetteIndexEntry{"RGraphSpace: ggplot2 graphics for PathwaySpace."}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, purl=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+
+*RGraphSpace* is an R package that generates *ggplot2* graphics for *igraph* objects [@Nepusz2006], which are scaled to fit within a standard unit space, making it easier to display different graphs side by side. *RGraphSpace* implements new geometric objects using *ggplot2* prototypes [@Wickham2016], taking into account relative sizes and positions of the input graph. By scaling graph elements, *RGraphSpace* can provide a framework for layered visualizations, ensuring proper alignment within a spatial map. *RGraphSpace*'s use of *ggplot2* allows for extensive customization of aesthetics and visual style, such as colors, shapes, and line types.
+
+# Quick start
+
+This section will create a toy *igraph* object to demonstrate the *RGraphSpace* workflow. The graph layout is configured manually to ensure that users can easily view all the relevant arguments needed to prepare the input data for the *RGraphSpace* package. We will use the igraph's `make_star()` function to create a simple star-like graph and then the `V()` and `E()` functions are used to set attributes for vertices and edges, respectively. The *RGraphSpace* package will require that all vertices have `x`, `y`, and `name` attributes.
+
+```{r Load packages for quick start, eval=TRUE, message=FALSE}
+#--- Load required packages
+library(igraph)
+library(ggplot2)
+library(RGraphSpace)
+```
+
+```{r Toy igraph - 1, eval=TRUE, message=FALSE, results=FALSE}
+# Make a 'toy' igraph with 5 nodes and 4 edges
+# Note: this will be a directed graph
+gtoy1 <- make_star(5, mode="out")
+
+# Check whether the graph is directed or not
+is.directed(gtoy1)
+## [1] TRUE
+
+# Check graph size
+vcount(gtoy1)
+## [1] 5
+ecount(gtoy1)
+## [1] 4
+
+# Assign 'x' and 'y' coordinates to each vertex;
+# ..this can be an arbitrary unit in (-Inf, +Inf)
+V(gtoy1)$x <- c(0, 3, -6, -6, -9)
+V(gtoy1)$y <- c(0, 0,  6, -6,  0)
+
+# Assign a name to each vertex
+V(gtoy1)$name <- paste0("n", 1:5)
+```
+
+```{r Toy igraph - 2, eval=TRUE, message=FALSE, out.width="100%"}
+# Plot the 'gtoy1' using standard R graphics
+plot(gtoy1)
+```
+
+```{r Toy igraph - 3, eval=TRUE, message=FALSE, out.width="80%"}
+# Plot the 'gtoy1' using RGraphSpace
+plotGraphSpace(gtoy1, marks = TRUE)
+```
+
+
+# *RGraphSpace* attributes
+
+Next, we will demonstrate all vertex and edge attributes that can be passed to *RGraphSpace* methods.
+
+## Vertex attributes
+
+```{r Node attributes, eval=TRUE, message=FALSE}
+# Node size (numeric in (0, 100), as '%' of the plot space)
+V(gtoy1)$nodeSize <- c(10, 5, 5, 5, 5)
+
+# Node shape (integer code between 0 and 25; see 'help(points)')
+V(gtoy1)$nodeShape <- c(21, 22, 23, 24, 25)
+
+# Node color (Hexadecimal or color name)
+V(gtoy1)$nodeColor <- c("red", "#00ad39", "grey80", "blue", "cyan")
+
+# Node line width (as in 'lwd' standard graphics; see 'help(gpar)')
+V(gtoy1)$nodeLineWidth <- 1
+
+# Node line color (Hexadecimal or color name)
+V(gtoy1)$nodeLineColor <- "grey20"
+
+# Node labels ('NA' will omit labels)
+V(gtoy1)$nodeLabel <- c("V1", "V2", "V3", "V4", NA)
+
+# Node label size (in pts)
+V(gtoy1)$nodeLabelSize <- 12
+
+# Node label color (Hexadecimal or color name)
+V(gtoy1)$nodeLabelColor <- "grey40"
+```
+
+## Edge line attributes
+
+Given a list of edges, *RGraphSpace* represents only one edge for each pair of connected vertices. If there are multiple edges connecting the same vertex pairs, it will display the line attributes of the first edge in the list.
+
+```{r Edge attributes - 1, eval=TRUE, message=FALSE}
+# Edge width (as in 'lwd' standard graphics; see 'help(gpar)')
+E(gtoy1)$edgeLineWidth <- 1
+
+# Edge color (Hexadecimal or color name)
+E(gtoy1)$edgeLineColor <- c("red","green","blue","black")
+
+# Edge type (as in 'lty' standard graphics; see 'help(gpar)')
+E(gtoy1)$edgeLineType <- c("solid", "dotted", "dashed", "2121")
+```
+
+## Arrowhead attributes
+
+Arrowhead in directed graphs. By default, an arrow will be drawn for each edge according to its left-to-right orientation in the edge list (*e.g.* `A -> B`).
+
+```{r Edge attributes - 2, eval=TRUE, message=FALSE}
+# Arrowhead types in directed graphs (integer code or character)
+## 0 = "---", 1 = "-->", -1 = "--|"
+E(gtoy1)$arrowType <- 1
+
+# Arrowhead length (as in 'lwd' standard graphics; see 'help(gpar)')
+E(gtoy1)$arrowLength <- 1
+```
+
+Arrowhead in undirected graphs. By default, no arrow will be drawn in undirected graphs.
+
+```{r Edge attributes - 3, eval=TRUE, message=FALSE}
+# Arrowhead types in undirected graphs (integer or character code)
+##  0 = "---"
+##  1 = "-->",  2 = "<--",  3 = "<->",  4 = "|->",
+## -1 = "--|", -2 = "|--", -3 = "|-|", -4 = "<-|", 
+E(gtoy1)$arrowType <- 1
+# Note: in undirected graphs, this attribute overrides the 
+# edge's orientation in the edge list
+
+# Arrowhead length (as in 'lwd' standard graphics; see 'help(gpar)')
+E(gtoy1)$arrowLength <- 1
+```
+
+... and now plot the updated *igraph* object with *RGraphSpace*:
+ 
+```{r A shortcut for RGraphSpace, eval=TRUE, message=FALSE, out.width="80%"}
+# Plot the updated 'gtoy1' using RGraphSpace
+plotGraphSpace(gtoy1, marks = "n1", mark.color = "white")
+```
+
+
+# Interactive layout
+
+```{r A shortcut for RedeR, eval=FALSE, message=FALSE}
+# Load RedeR, a graph package for interactive visualization
+## Note: for this example, please use Bioc >= 3.19 (currently devel)
+## BiocManager::install(version='devel')
+## BiocManager::install("RedeR")
+library(RedeR)
+startRedeR()
+resetRedeR()
+
+# Send 'gtoy1' to the RedeR interface
+addGraphToRedeR(gtoy1, unit="npc")
+relaxRedeR()
+
+# Fetch the graph with a fresh layout
+gtoy2 <- getGraphFromRedeR(unit="npc")
+
+# Check the round trip...
+plotGraphSpace(gtoy2, marks = "n1", mark.color = "white")
+
+## Note: for the round trip, shapes and line types are 
+## partially compatible between the tools.
+
+# ...alternatively, just update the graph layout
+gtoy2 <- updateLayoutFromRedeR(g=gtoy1)
+
+# ...check the updated layout
+plotGraphSpace(gtoy2, marks = "n1", mark.color = "white")
+```
+
+
+# Citation
+
+If you use *RGraphSpace*, please cite:
+
+* Sysbiolab Team. "RGraphSpace: A lightweight package for representing large igraph objects in a normalized coordinate system." R package, 2023.
+
+* Castro MA, Wang X, Fletcher MN, Meyer KB, Markowetz F (2012). "RedeR: R/Bioconductor package for representing modular structures, nested networks and multiple levels of hierarchical associations." *Genome Biology*, 13(4), R29. 
+https://bioconductor.org/packages/RedeR/
+
+
+# Session information
+```{r label='Session information', eval=TRUE, echo=FALSE}
+sessionInfo()
+```
+
+
+# References
+
