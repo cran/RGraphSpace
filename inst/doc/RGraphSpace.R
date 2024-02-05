@@ -10,7 +10,7 @@ library(RGraphSpace)
 gtoy1 <- make_star(5, mode="out")
 
 # Check whether the graph is directed or not
-is.directed(gtoy1)
+is_directed(gtoy1)
 ## [1] TRUE
 
 # Check graph size
@@ -113,8 +113,8 @@ plotGraphSpace(gtoy1, marks = "n1", mark.color = "white")
 #  # Check the round trip...
 #  plotGraphSpace(gtoy2, marks = "n1", mark.color = "white")
 #  
-#  ## Note: for the round trip, shapes and line types are
-#  ## partially compatible between the tools.
+#  ## Note: for the round trip, shapes and line types
+#  ## are partially compatible between the tools.
 #  
 #  # ...alternatively, just update the graph layout
 #  gtoy2 <- updateLayoutFromRedeR(g=gtoy1)

@@ -1,8 +1,7 @@
 Package: RGraphSpace
 Type: Package
-Title: A Lightweight Package for Representing Large 'igraph' Objects in
-        a Normalized Coordinate System
-Version: 1.0.3
+Title: A Lightweight Interface Between 'ggplot2' and 'igraph' Objects
+Version: 1.0.5
 Authors@R: 
     c(person("Victor", "Apolonio", role = "ctb"),
       person("Vinicius", "Chagas", role = "ctb"),
@@ -23,10 +22,10 @@ Collate: gspaceChecks.R gspaceValidation.R gspaceSupplements.R
 Encoding: UTF-8
 RoxygenNote: 7.3.1
 NeedsCompilation: no
-Packaged: 2024-02-02 17:27:24 UTC; maac
+Packaged: 2024-02-05 02:28:30 UTC; maac
 Author: Victor Apolonio [ctb],
   Vinicius Chagas [ctb],
   Mauro Castro [aut, cre] (<https://orcid.org/0000-0003-4942-8131>)
 Maintainer: Mauro Castro <mauro.a.castro@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-02-03 12:30:12 UTC
+Date/Publication: 2024-02-05 12:40:04 UTC

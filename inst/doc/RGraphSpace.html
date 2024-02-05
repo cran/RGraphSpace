@@ -11,7 +11,7 @@
 
 <meta name="author" content="Sysbiolab - Bioinformatics and Systems Biology Laboratory" />
 
-<meta name="date" content="2024-02-02" />
+<meta name="date" content="2024-02-04" />
 
 <title>RGraphSpace: A lightweight package for representing large igraph objects in a normalized coordinate system.</title>
 
@@ -1641,7 +1641,7 @@ for representing large <em>igraph</em> objects in a normalized
 coordinate system.</h1>
 <h4 class="author">Sysbiolab - Bioinformatics and Systems Biology
 Laboratory</h4>
-<h4 class="date">2024-02-02</h4>
+<h4 class="date">2024-02-04</h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 <p><br />
@@ -1692,13 +1692,8 @@ library(RGraphSpace)</code></pre>
 gtoy1 &lt;- make_star(5, mode=&quot;out&quot;)
 
 # Check whether the graph is directed or not
-is.directed(gtoy1)</code></pre>
-<pre><code>## Warning: `is.directed()` was deprecated in igraph 2.0.0.
-## ℹ Please use `is_directed()` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.</code></pre>
-<pre class="r"><code>## [1] TRUE
+is_directed(gtoy1)
+## [1] TRUE
 
 # Check graph size
 vcount(gtoy1)
@@ -1815,8 +1810,8 @@ gtoy2 &lt;- getGraphFromRedeR(unit=&quot;npc&quot;)
 # Check the round trip...
 plotGraphSpace(gtoy2, marks = &quot;n1&quot;, mark.color = &quot;white&quot;)
 
-## Note: for the round trip, shapes and line types are 
-## partially compatible between the tools.
+## Note: for the round trip, shapes and line types 
+## are partially compatible between the tools.
 
 # ...alternatively, just update the graph layout
 gtoy2 &lt;- updateLayoutFromRedeR(g=gtoy1)
@@ -1830,7 +1825,7 @@ plotGraphSpace(gtoy2, marks = &quot;n1&quot;, mark.color = &quot;white&quot;)</c
 <ul>
 <li><p>Sysbiolab Team. “RGraphSpace: A lightweight package for
 representing large igraph objects in a normalized coordinate system.” R
-package, 2023.</p></li>
+package, 2023. <a href="https://cran.r-project.org/package=RGraphSpace" class="uri">https://cran.r-project.org/package=RGraphSpace</a></p></li>
 <li><p>Castro MA, Wang X, Fletcher MN, Meyer KB, Markowetz F (2012).
 “RedeR: R/Bioconductor package for representing modular structures,
 nested networks and multiple levels of hierarchical associations.”
@@ -1862,19 +1857,19 @@ nested networks and multiple levels of hierarchical associations.”
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] RGraphSpace_1.0.3 ggplot2_3.4.4     igraph_2.0.1.1   
+## [1] RGraphSpace_1.0.5 ggplot2_3.4.4     igraph_2.0.1.1   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] crayon_1.5.2      vctrs_0.6.5       cli_3.6.2         knitr_1.45       
-##  [5] rlang_1.1.3       xfun_0.41         highr_0.10        generics_0.1.3   
-##  [9] jsonlite_1.8.8    glue_1.7.0        colorspace_2.1-0  htmltools_0.5.7  
-## [13] sass_0.4.8        fansi_1.0.6       scales_1.3.0      rmarkdown_2.25   
-## [17] grid_4.3.2        tibble_3.2.1      evaluate_0.23     munsell_0.5.0    
-## [21] jquerylib_0.1.4   fastmap_1.1.1     yaml_2.3.8        lifecycle_1.0.4  
-## [25] compiler_4.3.2    dplyr_1.1.4       pkgconfig_2.0.3   rstudioapi_0.15.0
-## [29] farver_2.1.1      digest_0.6.34     R6_2.5.1          tidyselect_1.2.0 
-## [33] utf8_1.2.4        pillar_1.9.0      magrittr_2.0.3    bslib_0.6.1      
-## [37] withr_3.0.0       tools_4.3.2       gtable_0.3.4      cachem_1.0.8</code></pre>
+##  [1] vctrs_0.6.5       cli_3.6.2         knitr_1.45        rlang_1.1.3      
+##  [5] xfun_0.41         highr_0.10        generics_0.1.3    jsonlite_1.8.8   
+##  [9] glue_1.7.0        colorspace_2.1-0  htmltools_0.5.7   sass_0.4.8       
+## [13] fansi_1.0.6       scales_1.3.0      rmarkdown_2.25    grid_4.3.2       
+## [17] tibble_3.2.1      evaluate_0.23     munsell_0.5.0     jquerylib_0.1.4  
+## [21] fastmap_1.1.1     yaml_2.3.8        lifecycle_1.0.4   compiler_4.3.2   
+## [25] dplyr_1.1.4       pkgconfig_2.0.3   rstudioapi_0.15.0 farver_2.1.1     
+## [29] digest_0.6.34     R6_2.5.1          tidyselect_1.2.0  utf8_1.2.4       
+## [33] pillar_1.9.0      magrittr_2.0.3    bslib_0.6.1       withr_3.0.0      
+## [37] tools_4.3.2       gtable_0.3.4      cachem_1.0.8</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
