@@ -11,7 +11,7 @@
 
 <meta name="author" content="Sysbiolab - Bioinformatics and Systems Biology Laboratory" />
 
-<meta name="date" content="2024-02-04" />
+<meta name="date" content="2024-08-18" />
 
 <title>RGraphSpace: A lightweight package for representing large igraph objects in a normalized coordinate system.</title>
 
@@ -1463,6 +1463,8 @@ padding: 0 0 0 0;
 margin: 0 0 0.5em 0;
 color: #333333;
 }
+code.hljs {
+font-size: 8pt; }
 br.small {
 content: " ";
 display: block;
@@ -1641,35 +1643,32 @@ for representing large <em>igraph</em> objects in a normalized
 coordinate system.</h1>
 <h4 class="author">Sysbiolab - Bioinformatics and Systems Biology
 Laboratory</h4>
-<h4 class="date">2024-02-04</h4>
+<h4 class="date">2024-08-18</h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
-<p><br />
-<em>RGraphSpace</em> is an R package that integrates <em>igraph</em> and
-<em>ggplot2</em> graphics within spatial maps. <em>RGraphSpace</em>
-implements new geometric objects using <em>ggplot2</em> prototypes,
-customized for representing large <em>igraph</em> objects in a
-normalized coordinate system.<br />
-</p>
+<em>RGraphSpace</em> is an <em>R</em> package that integrates
+<em>igraph</em> and <em>ggplot2</em> graphics within spatial maps.
+<em>RGraphSpace</em> implements new geometric objects using
+<em>ggplot2</em> prototypes, customized for representing large
+<em>igraph</em> objects in a normalized coordinate system.
 </div>
 
 </div>
 
 
+<p><br /> <strong>Package</strong>: RGraphSpace 1.0.6</p>
 <div id="overview" class="section level1">
 <h1>Overview</h1>
-<p><em>RGraphSpace</em> is an R package that generates <em>ggplot2</em>
-graphics for <em>igraph</em> objects <span class="citation">(Csardi and
-Nepusz 2006)</span>, which are scaled to fit within a standard unit
-space, making it easier to display different graphs side by side.
-<em>RGraphSpace</em> implements new geometric objects using
-<em>ggplot2</em> prototypes <span class="citation">(Wickham
-2016)</span>, taking into account relative sizes and positions of the
-input graph. By scaling graph elements, <em>RGraphSpace</em> can provide
-a framework for layered visualizations, ensuring proper alignment within
-a spatial map. <em>RGraphSpace</em>’s use of <em>ggplot2</em> allows for
-extensive customization of aesthetics and visual style, such as colors,
-shapes, and line types.</p>
+<p><em>RGraphSpace</em> is an <em>R</em> package that generates
+<em>ggplot2</em> graphics for <em>igraph</em> objects <span class="citation">(Csardi and Nepusz 2006)</span>, which are scaled to
+fit within a standard unit space, making it easier to display different
+graphs side by side. <em>RGraphSpace</em> implements new geometric
+objects using <em>ggplot2</em> prototypes <span class="citation">(Wickham 2016)</span>, taking into account relative
+sizes and positions of the input graph. By scaling graph elements,
+<em>RGraphSpace</em> can provide a framework for layered visualizations,
+ensuring proper alignment within a spatial map. <em>RGraphSpace</em>’s
+use of <em>ggplot2</em> allows for extensive customization of aesthetics
+and visual style, such as colors, shapes, and line types.</p>
 </div>
 <div id="quick-start" class="section level1">
 <h1>Quick start</h1>
@@ -1793,9 +1792,16 @@ plotGraphSpace(gtoy1, marks = &quot;n1&quot;, mark.color = &quot;white&quot;)</c
 <div id="interactive-layout" class="section level1">
 <h1>Interactive layout</h1>
 <pre class="r"><code># Load RedeR, a graph package for interactive visualization
-## Note: for this example, please use Bioc &gt;= 3.19 (currently devel)
-## BiocManager::install(version=&#39;devel&#39;)
-## BiocManager::install(&quot;RedeR&quot;)
+## Note: for this example, please use Bioc &gt;= 3.19
+if(!require(&quot;BiocManager&quot;, quietly = TRUE)){
+  install.packages(&quot;BiocManager&quot;)
+  #BiocManager::install(version = &quot;3.19&quot;)
+}
+if(!require(&quot;RedeR&quot;, quietly = TRUE)){
+  BiocManager::install(&quot;RedeR&quot;)
+}
+
+# Launch the RedeR application
 library(RedeR)
 startRedeR()
 resetRedeR()
@@ -1810,8 +1816,8 @@ gtoy2 &lt;- getGraphFromRedeR(unit=&quot;npc&quot;)
 # Check the round trip...
 plotGraphSpace(gtoy2, marks = &quot;n1&quot;, mark.color = &quot;white&quot;)
 
-## Note: for the round trip, shapes and line types 
-## are partially compatible between the tools.
+## Note that for the round trip, shapes and line types are
+## only partially compatible between ggplot2 and RedeR.
 
 # ...alternatively, just update the graph layout
 gtoy2 &lt;- updateLayoutFromRedeR(g=gtoy1)
@@ -1825,22 +1831,23 @@ plotGraphSpace(gtoy2, marks = &quot;n1&quot;, mark.color = &quot;white&quot;)</c
 <ul>
 <li><p>Sysbiolab Team. “RGraphSpace: A lightweight package for
 representing large igraph objects in a normalized coordinate system.” R
-package, 2023. <a href="https://cran.r-project.org/package=RGraphSpace" class="uri">https://cran.r-project.org/package=RGraphSpace</a></p></li>
+package, 2023. Doi: 10.32614/CRAN.package.RGraphSpace</p></li>
 <li><p>Castro MA, Wang X, Fletcher MN, Meyer KB, Markowetz F (2012).
 “RedeR: R/Bioconductor package for representing modular structures,
 nested networks and multiple levels of hierarchical associations.”
-<em>Genome Biology</em>, 13(4), R29. <a href="https://bioconductor.org/packages/RedeR/" class="uri">https://bioconductor.org/packages/RedeR/</a></p></li>
+<em>Genome Biology</em>, 13(4), R29. Doi:
+10.1186/gb-2012-13-4-r29</p></li>
 </ul>
 </div>
 <div id="session-information" class="section level1">
 <h1>Session information</h1>
-<pre><code>## R version 4.3.2 (2023-10-31)
-## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 22.04.3 LTS
+<pre><code>## R version 4.4.1 (2024-06-14)
+## Platform: x86_64-pc-linux-gnu
+## Running under: Ubuntu 22.04.4 LTS
 ## 
 ## Matrix products: default
-## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.10.0 
-## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.10.0
+## BLAS:   /usr/lib/x86_64-linux-gnu/atlas/libblas.so.3.10.3 
+## LAPACK: /usr/lib/x86_64-linux-gnu/atlas/liblapack.so.3.10.3;  LAPACK version 3.10.0
 ## 
 ## locale:
 ##  [1] LC_CTYPE=pt_BR.UTF-8       LC_NUMERIC=C              
@@ -1857,19 +1864,19 @@ nested networks and multiple levels of hierarchical associations.”
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] RGraphSpace_1.0.5 ggplot2_3.4.4     igraph_2.0.1.1   
+## [1] RGraphSpace_1.0.6 ggplot2_3.5.0     igraph_2.0.2     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] vctrs_0.6.5       cli_3.6.2         knitr_1.45        rlang_1.1.3      
-##  [5] xfun_0.41         highr_0.10        generics_0.1.3    jsonlite_1.8.8   
-##  [9] glue_1.7.0        colorspace_2.1-0  htmltools_0.5.7   sass_0.4.8       
-## [13] fansi_1.0.6       scales_1.3.0      rmarkdown_2.25    grid_4.3.2       
-## [17] tibble_3.2.1      evaluate_0.23     munsell_0.5.0     jquerylib_0.1.4  
-## [21] fastmap_1.1.1     yaml_2.3.8        lifecycle_1.0.4   compiler_4.3.2   
+##  [1] vctrs_0.6.5       cli_3.6.2         knitr_1.46        rlang_1.1.3      
+##  [5] xfun_0.43         highr_0.10        generics_0.1.3    jsonlite_1.8.8   
+##  [9] glue_1.7.0        colorspace_2.1-0  htmltools_0.5.8.1 sass_0.4.9       
+## [13] fansi_1.0.6       scales_1.3.0      rmarkdown_2.26    grid_4.4.1       
+## [17] tibble_3.2.1      evaluate_0.23     munsell_0.5.1     jquerylib_0.1.4  
+## [21] fastmap_1.1.1     yaml_2.3.8        lifecycle_1.0.4   compiler_4.4.1   
 ## [25] dplyr_1.1.4       pkgconfig_2.0.3   rstudioapi_0.15.0 farver_2.1.1     
-## [29] digest_0.6.34     R6_2.5.1          tidyselect_1.2.0  utf8_1.2.4       
-## [33] pillar_1.9.0      magrittr_2.0.3    bslib_0.6.1       withr_3.0.0      
-## [37] tools_4.3.2       gtable_0.3.4      cachem_1.0.8</code></pre>
+## [29] digest_0.6.35     R6_2.5.1          tidyselect_1.2.1  utf8_1.2.4       
+## [33] pillar_1.9.0      magrittr_2.0.3    bslib_0.7.0       withr_3.0.0      
+## [37] tools_4.4.1       gtable_0.3.4      cachem_1.0.8</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>

@@ -96,9 +96,16 @@ plotGraphSpace(gtoy1, marks = "n1", mark.color = "white")
 
 ## ----A shortcut for RedeR, eval=FALSE, message=FALSE--------------------------
 #  # Load RedeR, a graph package for interactive visualization
-#  ## Note: for this example, please use Bioc >= 3.19 (currently devel)
-#  ## BiocManager::install(version='devel')
-#  ## BiocManager::install("RedeR")
+#  ## Note: for this example, please use Bioc >= 3.19
+#  if(!require("BiocManager", quietly = TRUE)){
+#    install.packages("BiocManager")
+#    #BiocManager::install(version = "3.19")
+#  }
+#  if(!require("RedeR", quietly = TRUE)){
+#    BiocManager::install("RedeR")
+#  }
+#  
+#  # Launch the RedeR application
 #  library(RedeR)
 #  startRedeR()
 #  resetRedeR()
@@ -113,8 +120,8 @@ plotGraphSpace(gtoy1, marks = "n1", mark.color = "white")
 #  # Check the round trip...
 #  plotGraphSpace(gtoy2, marks = "n1", mark.color = "white")
 #  
-#  ## Note: for the round trip, shapes and line types
-#  ## are partially compatible between the tools.
+#  ## Note that for the round trip, shapes and line types are
+#  ## only partially compatible between ggplot2 and RedeR.
 #  
 #  # ...alternatively, just update the graph layout
 #  gtoy2 <- updateLayoutFromRedeR(g=gtoy1)
