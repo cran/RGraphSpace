@@ -1,6 +1,6 @@
 Package: RGraphSpace
 Type: Package
-Version: 1.0.7
+Version: 1.0.8
 Title: A Lightweight Interface Between 'ggplot2' and 'igraph' Objects
 Description: Interface to integrate 'igraph' and 'ggplot2' graphics within spatial maps. 'RGraphSpace' implements new geometric objects using 'ggplot2' prototypes, customized for representing large 'igraph' objects in a normalized coordinate system. By scaling shapes and graph elements, 'RGraphSpace' can provide a framework for layered visualizations.
 Authors@R: 
@@ -9,8 +9,8 @@ Authors@R:
       person("Mauro", "Castro", role = c("aut", "cre"),
               email = "mauro.a.castro@gmail.com",
               comment = c(ORCID = "0000-0003-4942-8131")))
-Depends: R(>= 4.4), methods, igraph, ggplot2
-Imports: grDevices, scales, grid
+Depends: R(>= 4.4), methods, ggplot2
+Imports: grDevices, scales, grid, igraph
 Suggests: knitr, rmarkdown, testthat
 Enhances: RedeR
 License: Artistic-2.0
@@ -23,10 +23,11 @@ Collate: gspaceChecks.R gspaceValidation.R gspaceSupplements.R
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 NeedsCompilation: no
-Packaged: 2024-11-12 02:23:19 UTC; maac
+Packaged: 2025-05-14 13:18:27 UTC; maac
 Author: Victor Apolonio [ctb],
   Vinicius Chagas [ctb],
-  Mauro Castro [aut, cre] (<https://orcid.org/0000-0003-4942-8131>)
+  Mauro Castro [aut, cre] (ORCID:
+    <https://orcid.org/0000-0003-4942-8131>)
 Maintainer: Mauro Castro <mauro.a.castro@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-11-12 10:20:12 UTC
+Date/Publication: 2025-05-14 13:50:02 UTC
