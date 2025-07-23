@@ -5,8 +5,8 @@ library(ggplot2)
 library(RGraphSpace)
 
 ## ----Toy igraph - 1, eval=TRUE, message=FALSE, results=FALSE------------------
-# Make a 'toy' igraph with 5 nodes and 4 edges
-# Note: this will be a directed graph
+# Make a 'toy' igraph with 5 nodes and 4 edges;
+# ..either a directed or undirected graph
 gtoy1 <- make_star(5, mode="out")
 
 # Check whether the graph is directed or not
@@ -21,8 +21,8 @@ ecount(gtoy1)
 
 # Assign 'x' and 'y' coordinates to each vertex;
 # ..this can be an arbitrary unit in (-Inf, +Inf)
-V(gtoy1)$x <- c(0, 2, -4, -4, -9)
-V(gtoy1)$y <- c(0, 0,  4, -4,  0)
+V(gtoy1)$x <- c(0, 2, -2, -4, -8)
+V(gtoy1)$y <- c(0, 0,  2, -4,  0)
 
 # Assign a name to each vertex
 V(gtoy1)$name <- paste0("n", 1:5)
@@ -33,17 +33,17 @@ plot(gtoy1)
 
 ## ----Toy igraph - 3, eval=TRUE, message=FALSE, out.width="80%"----------------
 # Plot the 'gtoy1' using RGraphSpace
-plotGraphSpace(gtoy1, marks = TRUE)
+plotGraphSpace(gtoy1, add.labels = TRUE)
 
 ## ----Node attributes, eval=TRUE, message=FALSE--------------------------------
 # Node size (numeric in (0, 100), as '%' of the plot space)
-V(gtoy1)$nodeSize <- c(10, 5, 5, 5, 5)
+V(gtoy1)$nodeSize <- c(8, 5, 5, 5, 5)
 
 # Node shape (integer code between 0 and 25; see 'help(points)')
 V(gtoy1)$nodeShape <- c(21, 22, 23, 24, 25)
 
 # Node color (Hexadecimal or color name)
-V(gtoy1)$nodeColor <- c("red", "#00ad39", "grey80", "blue", "cyan")
+V(gtoy1)$nodeColor <- c("red", "#00ad39", "grey80", "lightblue", "cyan")
 
 # Node line width (as in 'lwd' standard graphics; see 'help(gpar)')
 V(gtoy1)$nodeLineWidth <- 1
@@ -55,20 +55,23 @@ V(gtoy1)$nodeLineColor <- "grey20"
 V(gtoy1)$nodeLabel <- c("V1", "V2", "V3", "V4", NA)
 
 # Node label size (in pts)
-V(gtoy1)$nodeLabelSize <- 12
+V(gtoy1)$nodeLabelSize <- 8
 
 # Node label color (Hexadecimal or color name)
-V(gtoy1)$nodeLabelColor <- "grey40"
+V(gtoy1)$nodeLabelColor <- "black"
 
 ## ----Edge attributes - 1, eval=TRUE, message=FALSE----------------------------
 # Edge width (as in 'lwd' standard graphics; see 'help(gpar)')
-E(gtoy1)$edgeLineWidth <- 1
+E(gtoy1)$edgeLineWidth <- 0.8
 
 # Edge color (Hexadecimal or color name)
 E(gtoy1)$edgeLineColor <- c("red","green","blue","black")
 
 # Edge type (as in 'lty' standard graphics; see 'help(gpar)')
-E(gtoy1)$edgeLineType <- c("solid", "dotted", "dashed", "2121")
+E(gtoy1)$edgeLineType <- c("solid", "11", "dashed", "2124")
+
+# Edge weight (numeric >=0; not passed to ggplot)
+E(gtoy1)$weight <- 1
 
 ## ----Edge attributes - 2, eval=TRUE, message=FALSE----------------------------
 # Arrowhead types in directed graphs (integer code or character)
@@ -92,7 +95,7 @@ E(gtoy1)$arrowLength <- 1
 
 ## ----A shortcut for RGraphSpace, eval=TRUE, message=FALSE, out.width="80%"----
 # Plot the updated 'gtoy1' using RGraphSpace
-plotGraphSpace(gtoy1, marks = "n1", mark.color = "white")
+plotGraphSpace(gtoy1, add.labels = TRUE)
 
 ## ----A shortcut for RedeR, eval=FALSE, message=FALSE--------------------------
 # # Load RedeR, a graph package for interactive visualization
@@ -118,7 +121,7 @@ plotGraphSpace(gtoy1, marks = "n1", mark.color = "white")
 # gtoy2 <- getGraphFromRedeR(unit="npc")
 # 
 # # Check the round trip...
-# plotGraphSpace(gtoy2, marks = "n1", mark.color = "white")
+# plotGraphSpace(gtoy2, add.labels = TRUE)
 # 
 # ## Note that for the round trip, shapes and line types are
 # ## only partially compatible between ggplot2 and RedeR.
@@ -127,7 +130,7 @@ plotGraphSpace(gtoy1, marks = "n1", mark.color = "white")
 # gtoy2 <- updateLayoutFromRedeR(g=gtoy1)
 # 
 # # ...check the updated layout
-# plotGraphSpace(gtoy2, marks = "n1", mark.color = "white")
+# plotGraphSpace(gtoy2, add.labels = TRUE)
 
 ## ----label='Session information', eval=TRUE, echo=FALSE-----------------------
 sessionInfo()

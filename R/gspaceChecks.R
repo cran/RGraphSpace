@@ -51,12 +51,12 @@
 
 #-------------------------------------------------------------------------------
 .validate.colors <- function(check, name, para) {
-    if (name == "singleColor") {
+    if (check == "singleColor") {
         if (!.is_singleColor(para)) {
             msg <- paste0("'", name, "' should be a single color.")
             stop(msg, call. = FALSE)
         }
-    } else if (name == "allColors") {
+    } else if (check == "allColors") {
         if (!.is_color(para)) {
             msg <- paste0("'", name, "' should be a vector with colors.")
             stop(msg, call. = FALSE)
@@ -67,8 +67,8 @@
 #-------------------------------------------------------------------------------
 # Validate custom plot args
 .validate.plot.args <- function(name, para) {
-    if (name == "marks") {
-        if (!.is_singleLogical(para)) {
+    if (name == "node.labels") {
+        if (!is.null(para)) {
             if (!.all_characterValues(para)) {
                 msg <- paste0("'", name, "' should be a vector with strings.")
                 stop(msg, call. = FALSE)
