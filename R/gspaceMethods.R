@@ -107,7 +107,7 @@ GraphSpace <- function(g, mar = 0.1, layout = NULL, image = NULL,
 #' @importFrom ggplot2 element_rect margin element_blank layer theme_bw
 #' @importFrom ggplot2 element_line element_text ggproto theme theme_gray
 #' @importFrom ggplot2 scale_linetype_manual annotation_raster coord_fixed
-#' @importFrom ggplot2 scale_x_continuous scale_y_continuous expansion
+#' @importFrom ggplot2 scale_x_continuous scale_y_continuous expansion labs
 #' @importFrom grDevices col2rgb
 #' @importFrom grid gpar arrow unit pointsGrob
 #' @importFrom scales alpha
@@ -168,7 +168,10 @@ setMethod("plotGraphSpace", "GraphSpace",
         cl <- .set.theme.bks(theme)
         
         #--- initialize a ggplot object
-        ggp <- .set.gspace(nodes, xlab, ylab, cl)
+        ggp <- .set.gspace(nodes, cl)
+        
+        #--- add labels
+        ggp <- ggp + labs(x=xlab, y=ylab)
         
         #--- add image
         if(pars$image.layer){

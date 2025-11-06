@@ -99,7 +99,7 @@ plotGraphSpace(gtoy1, add.labels = TRUE)
 
 ## ----A shortcut for RedeR, eval=FALSE, message=FALSE--------------------------
 # # Load RedeR, a graph package for interactive visualization
-# ## Note: for this example, please use Bioc >= 3.19
+# ## Note: this example requires Bioc >= 3.19
 # if(!require("BiocManager", quietly = TRUE)){
 #   install.packages("BiocManager")
 #   #BiocManager::install(version = "3.19")
@@ -117,14 +117,14 @@ plotGraphSpace(gtoy1, add.labels = TRUE)
 # addGraphToRedeR(gtoy1, unit="npc")
 # relaxRedeR()
 # 
-# # Fetch the graph with a fresh layout
+# # Fetch 'gtoy1' with a fresh layout
 # gtoy2 <- getGraphFromRedeR(unit="npc")
 # 
 # # Check the round trip...
 # plotGraphSpace(gtoy2, add.labels = TRUE)
 # 
 # ## Note that for the round trip, shapes and line types are
-# ## only partially compatible between ggplot2 and RedeR.
+# ## partially compatible between ggplot2 and RedeR.
 # 
 # # ...alternatively, just update the graph layout
 # gtoy2 <- updateLayoutFromRedeR(g=gtoy1)
