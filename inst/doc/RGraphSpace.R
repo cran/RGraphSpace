@@ -70,16 +70,13 @@ E(gtoy1)$edgeLineColor <- c("red","green","blue","black")
 # Edge type (as in 'lty' standard graphics; see 'help(gpar)')
 E(gtoy1)$edgeLineType <- c("solid", "11", "dashed", "2124")
 
-# Edge weight (numeric >=0; not passed to ggplot)
+# Edge weight (numeric; not passed to ggplot)
 E(gtoy1)$weight <- 1
 
 ## ----Edge attributes - 2, eval=TRUE, message=FALSE----------------------------
 # Arrowhead types in directed graphs (integer code or character)
 ## 0 = "---", 1 = "-->", -1 = "--|"
 E(gtoy1)$arrowType <- 1
-
-# Arrowhead length (as in 'lwd' standard graphics; see 'help(gpar)')
-E(gtoy1)$arrowLength <- 1
 
 ## ----Edge attributes - 3, eval=TRUE, message=FALSE----------------------------
 # Arrowhead types in undirected graphs (integer or character code)
@@ -89,9 +86,6 @@ E(gtoy1)$arrowLength <- 1
 E(gtoy1)$arrowType <- 1
 # Note: in undirected graphs, this attribute overrides the 
 # edge's orientation in the edge list
-
-# Arrowhead length (as in 'lwd' standard graphics; see 'help(gpar)')
-E(gtoy1)$arrowLength <- 1
 
 ## ----A shortcut for RGraphSpace, eval=TRUE, message=FALSE, out.width="80%"----
 # Plot the updated 'gtoy1' using RGraphSpace
