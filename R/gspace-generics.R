@@ -1,11 +1,26 @@
 
-setGeneric("plotGraphSpace", function(gs, ...) 
+setOldClass("igraph")
+
+setGeneric("GraphSpace", function(g, ...) standardGeneric("GraphSpace"))
+
+setGeneric("plotGraphSpace", function(gs, ...)
   standardGeneric("plotGraphSpace"),
   package = "RGraphSpace"
 )
 
 setGeneric("getGraphSpace", function(gs, what = "summary") 
   standardGeneric("getGraphSpace"), 
+  package = "RGraphSpace"
+)
+
+setGeneric("normalizeGraphSpace", function(gs, image = NULL, ...) 
+  standardGeneric("normalizeGraphSpace"),
+  signature = c("gs", "image"),
+  package = "RGraphSpace"
+)
+
+setGeneric("cropGraphSpace", function(gs, ...) 
+  standardGeneric("cropGraphSpace"),
   package = "RGraphSpace"
 )
 

@@ -2,178 +2,46 @@
 ################################################################################
 ### Main constructor of GraphSpace-class objects
 ################################################################################
-.buildGraphSpace <- function(g, mar = 0.1, image = NULL, layout = NULL,
-    verbose = TRUE) {
+.buildGraphSpace <- function(g, layout = NULL, verbose = TRUE) {
     
     gg <- .validate_igraph(g, layout, verbose)
-    
-    if(verbose) message("Extracting vertices...")
     nodes <- .get_nodes(gg)
-    temp <- .center_nodes(nodes, image, mar, verbose=verbose)
-    nodes <- temp$nodes
-    image.mar <- temp$image
-    image.layer <- temp$image.layer
-    
-    if(verbose) message("Extracting edges...")
     edges <- .get_edges(gg)
     
     if(verbose) message("Creating a 'GraphSpace' object...")
-    pars <- list(is.directed = is_directed(gg), mar = mar, 
-        image.layer = image.layer)
-    gs <- new(Class = "GraphSpace", nodes = nodes, edges = edges, 
-        graph=gg, image = image.mar, pars = pars, 
-        misc = list(g = g, image=image))
+    pars <- list(is.directed = is_directed(gg), 
+        is.normalized = FALSE, image.layer = FALSE)
+    gs <- new(Class = "GraphSpace", 
+        nodes = nodes, 
+        edges = edges, 
+        graph = gg, 
+        image = as.raster(matrix()), 
+        pars = pars, 
+        misc = list(g = g))
+    
     return(gs)
-}
-
-################################################################################
-### Functions for image adjusts
-################################################################################
-
-#-------------------------------------------------------------------------------
-.frame_nodes <- function(nodes, image, mar){
-    d <- dim(image)
-    xr <- range(nodes$x)
-    yr <- range(nodes$y)
-    if( (xr[1] < 1) || (xr[2] > d[2]) ){
-        stop("Graph coordinates outside image dimensions.", call. = FALSE)
-    }
-    if( (yr[1] < 1) || (yr[2] > d[1]) ){
-        stop("Graph coordinates outside image dimensions.", call. = FALSE)
-    }
-    # adjust image and node coordinates
-    res <- .crop_image(nds=nodes, img=image, mar)
-    res <- .square_image(res$nodes, res$image)
-    # normalize node coordinates
-    d <- dim(res$image)
-    res$nodes$x <- scales::rescale(res$nodes$x, from = c(1, d[2]), to = c(0, 1))
-    res$nodes$y <- scales::rescale(res$nodes$y, from = c(1, d[1]), to = c(0, 1))
-    return(res)
-}
-
-#-------------------------------------------------------------------------------
-.crop_image <- function(nds, img, mar){
     
-    d <- dim(img)
-    
-    # set node limits to integer
-    xl <- range(nds$x)
-    yl <- range(nds$y)
-    xl <- c(ceiling(xl[1]), floor(xl[2]))
-    yl <- c(ceiling(yl[1]), floor(yl[2]))
-    nds$x <- scales::rescale(nds$x, to=xl)
-    nds$y <- scales::rescale(nds$y, to=yl)
-    
-    # set margins
-    dp <- c(yl[2]-yl[1], xl[2]-xl[1])
-    m <- floor(min(dp) * mar)
-    dxmar <- min( c(xl[1], d[2] - xl[2]) )
-    dymar <- min( c(yl[1], d[1] - yl[2]) )
-    m <- min(c(m, dxmar, dymar))
-    m <- max(m, 1)
-    xl <- c(xl[1] - m, xl[2] + m)
-    yl <- c(yl[1] - m, yl[2] + m)
-    
-    # crop on flipped rows to match node y-coordinates
-    img <- img[seq.int(nrow(img), 1), ]
-    img <- img[seq.int(yl[1], yl[2]), seq.int(xl[1], xl[2])]
-    img <- img[seq.int(nrow(img), 1), ]
-    
-    # set new node coordinates
-    xl <- c(m + 1, ncol(img) - m)
-    yl <- c(m + 1, nrow(img) - m)
-    nds$x <- scales::rescale(nds$x, to=xl)
-    nds$y <- scales::rescale(nds$y, to=yl)
-    
-    res <- list(nodes=nds, image=img)
-    return(res)
-} 
-# adjust limits to a square window
-.adjust_lim <- function(xl, yl, d){
-    dx <- xl[2] - xl[1] + 1
-    dy <- yl[2] - yl[1] + 1
-    if(dx > dy){
-        dm <- (dx - dy)/2
-        yl <- c(yl[1] - ceiling(dm), yl[2] + floor(dm))
-        if(yl[1] < 1) yl[1] <- 1
-        if(yl[2] > d[2]) yl[2] <- d[2]
-    } else if(dx < dy){
-        dm <- (dy - dx)/2
-        xl <- c(xl[1] - ceiling(dm), xl[2] + floor(dm))
-        if(xl[1] < 1) xl[1] <- 1
-        if(xl[2] > d[2]) xl[2] <- d[2]
-    }
-    dx <- xl[2] - xl[1] + 1
-    dy <- yl[2] - yl[1] + 1
-    res <- list(xl = xl, yl = yl, mlen = max(dx,dy))
-    return(res)
-}
-
-#-------------------------------------------------------------------------------
-.square_image <- function(nds, img ){
-    d <- dim(img )
-    if(d[1] > d[2]){
-        n <- ceiling( (d[1] - d[2]) )/2
-        img_d <- matrix(NA, nrow = d[1], ncol = d[1])
-        img_d[ , seq(n + 1, n + d[2])] <- as.matrix(img)
-        nds$x <- nds$x + n
-        img  <- as.raster(img_d)
-    } else if(d[1] < d[2]){
-        n <- ceiling( (d[2] - d[1])/2 )
-        img_d <- matrix(NA, nrow = d[2], ncol = d[2])
-        img_d[seq(n + 1, n + d[1]), ] <- as.matrix(img)
-        nds$y <- nds$y + n
-        img  <- as.raster(img_d)
-    }
-    res <- list(nodes=nds, image=img)
-    return(res)
-}
-
-#-------------------------------------------------------------------------------
-.center_nodes <- function(nodes, image, mar, verbose = FALSE){
-    if(is.null(image)){
-        if(nrow(nodes)>0){
-            nodes$x <- nodes$x - mean(range(nodes$x))
-            nodes$y <- nodes$y - mean(range(nodes$y))
-            from <- range(c(nodes$x, nodes$y))
-            to <- c(mar, 1-mar)
-            nodes$x <- scales::rescale(nodes$x, from = from, to=to)
-            nodes$y <- scales::rescale(nodes$y, from = from, to=to)
-        }
-        temp <- list(nodes=nodes, image=as.raster(matrix()),
-            image.layer = FALSE)
-    } else {
-        if(verbose) message("Setting graph coordinates to image space...")
-        if(!is.raster(image)) image <- as.raster(image)
-        if(nrow(nodes) > 0){
-            temp <- .frame_nodes(nodes, image, mar)
-            temp$image.layer <- TRUE
-        } else {
-            temp <- list(nodes=nodes, image=image, image.layer=TRUE)
-        }
-    }
-    return(temp)
 }
 
 ################################################################################
 ### Get nodes and edges in a df object
 ################################################################################
-.get_nodes <- function(g){
-    lt <- vertex_attr(g)
+.get_nodes <- function(gg){
+    lt <- vertex_attr(gg)
     nodes <- data.frame(row.names = seq_along(lt[[1]]))
     for(nm in names(lt)){
         nodes[[nm]] <- lt[[nm]]
     }
-    vertex <- seq_len(igraph::vcount(g))
+    vertex <- seq_len(igraph::vcount(gg))
     nodes <- cbind(vertex = vertex, nodes)
     rownames(nodes) <- nodes$name
     return(nodes)
 }
-.get_edges <- function(g){
-    if (igraph::is_directed(g)) {
-        edges <- .get_directed_edges(g)
+.get_edges <- function(gg){
+    if (igraph::is_directed(gg)) {
+        edges <- .get_directed_edges(gg)
     } else {
-        edges <- .get_undirected_edges(g)
+        edges <- .get_undirected_edges(gg)
     }
     return(edges)
 }
@@ -195,10 +63,11 @@
             stop("unexpected indexing during edge attribute combination.", 
                 call. = FALSE)
         }
-        edges <- cbind(edges, atts[,-c(1,2)])
+        edges <- cbind(edges, atts[,-c(1,2), drop = FALSE])
         edges <- edges[order(edges$vertex1,edges$vertex2), ]
         idx <- colnames(edges) %in% names(.get_empty_edgedf())
         edges <- edges[, c(which(idx), which(!idx))]
+        rownames(edges) <- NULL
     } else {
         edges <- .get_empty_edgedf()
     }
@@ -256,7 +125,7 @@
             stop("unexpected indexing during edge attribute combination.", 
                 call. = FALSE)
         }
-        edges <- cbind(edges, atts[, -c(1, 2)])
+        edges <- cbind(edges, atts[, -c(1, 2), drop=FALSE])
         eid <- unique(edges$eid[edges$e > 0])
         edges <- edges[edges$eid %in% eid, ]
         edges <- edges[order(edges$eid), ]
@@ -264,6 +133,7 @@
         edges <- .set_arrowtype_dir(edges)
         idx <- colnames(edges) %in% names(.get_empty_edgedf())
         edges <- edges[, c(which(idx), which(!idx))]
+        rownames(edges) <- NULL
     } else {
         edges <- .get_empty_edgedf()
     }
@@ -354,37 +224,22 @@
 ### Other functions
 ################################################################################
 
-#-------------------------------------------------------------------------------
+.get_gs_edges <- function(gs){
+    nodes <- gs@nodes
+    edges <- gs@edges
+    coord <- data.frame(
+        x = nodes[edges$vertex1, "x"],
+        y = nodes[edges$vertex1, "y"],
+        xend = nodes[edges$vertex2, "x"],
+        yend = nodes[edges$vertex2, "y"]
+        )
+    edges <- cbind(coord, edges)
+    return(edges)
+}
+
 .get_emode <- function(arrow_type){
     emode <- abs(arrow_type)
     emode[emode>3] <- 3
     return(emode)
 }
 
-#-------------------------------------------------------------------------------
-.get_edge_coords <- function(gs){
-    #--- Add segments
-    nodes <- gs@nodes
-    edges <- gs@edges
-    edges$x <- nodes[edges$vertex1,"x"]
-    edges$y <- nodes[edges$vertex1,"y"]
-    edges$xend <- nodes[edges$vertex2,"x"]
-    edges$yend <- nodes[edges$vertex2,"y"]
-    #--- Estimate arrow offsets from node radius and line width
-    offsets <- (nodes$nodeSize/2 * 0.01) + (nodes$nodeLineWidth * 0.01)
-    #--- Add arrow offsets
-    emode <- .get_emode(edges$arrowType)
-    edges$offsetStart <- ifelse(emode %in% c(0,1), 0, 
-        offsets[edges$vertex1])
-    edges$offsetEnd <- ifelse(emode %in% c(0,2), 0, 
-        offsets[edges$vertex2])
-    return(edges)
-}
-.get_node_coords <- function(gs){
-    nodes <- gs@nodes
-    # Note1: nodeSize is interpreted as % of graph space; here returned for npc
-    # Note2: for 'pch' in 0:25, size is about 75% of the character
-    # height (see 'points()' graphics); here rectified by a 1.25 factor
-    nodes$nodeSize <- nodes$nodeSize * 0.01 * 1.25
-    return(nodes)
-}
